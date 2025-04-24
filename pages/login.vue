@@ -32,7 +32,7 @@ const { mutateAsync: login, isPending: isPendingCreate } = useMutation({
     Cookie.set("access_token", data.token, {
       expires: 1,
     });
-
+    navigateTo('/')
     message.success("Login successful");
   },
   onError: () => {

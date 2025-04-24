@@ -5,24 +5,25 @@ import {
   LaptopOutlined,
 } from "@ant-design/icons-vue";
 import { CURRENT_STATE } from "~/utils/enum/state";
+import type { PropType } from "vue";
 
-const props = defineProps({
+defineProps({
+  isError: {
+    type: Boolean,
+    default: false,
+  },
+  handleClick: {
+    type: Function,
+    default: () => {},
+  },
   state: {
-    type: CURRENT_STATE,
+    type: Object as PropType<CURRENT_STATE>,
     default: CURRENT_STATE.WFH,
   },
 });
 
-const current = ref<CURRENT_STATE>(props.state);
 const optionSelected = ref([]);
 
-const handleClick = (state: CURRENT_STATE) => {
-  current.value = state;
-};
-
-const handleChange = (value: string) => {
-  console.log(`selected ${value}`);
-};
 const options = [...Array(25)].map((_, i) => ({
   value: (i + 10).toString(36) + (i + 1),
 }));
@@ -32,11 +33,13 @@ const options = [...Array(25)].map((_, i) => ({
   <div class="flex items-center justify-center h-full">
     <a-card style="width: 250px">
       <a-typography-title class="text-center" :level="4">{{
-        current
+        state
       }}</a-typography-title>
       <a-select
+        v-if="state === CURRENT_STATE.WFO"
         v-model:value="optionSelected"
         mode="tags"
+        status="error"
         style="width: 100%"
         placeholder="Tags Mode"
         :options="options"
@@ -46,7 +49,7 @@ const options = [...Array(25)].map((_, i) => ({
           :color="'bg-blue-500'"
           @click="handleClick(CURRENT_STATE.WFO)"
           :state="CURRENT_STATE.WFO"
-          :isSelected="current === CURRENT_STATE.WFO"
+          :isSelected="state === CURRENT_STATE.WFO"
         >
           <LaptopOutlined />
         </TagState>
@@ -54,7 +57,7 @@ const options = [...Array(25)].map((_, i) => ({
           :color="'bg-gray-500'"
           @click="handleClick(CURRENT_STATE.WFH)"
           :state="CURRENT_STATE.WFH"
-          :isSelected="current === CURRENT_STATE.WFH"
+          :isSelected="state === CURRENT_STATE.WFH"
         >
           <HomeOutlined />
         </TagState>
@@ -62,7 +65,7 @@ const options = [...Array(25)].map((_, i) => ({
           :color="'bg-red-500'"
           @click="handleClick(CURRENT_STATE.OFF)"
           :state="CURRENT_STATE.OFF"
-          :isSelected="current === CURRENT_STATE.OFF"
+          :isSelected="state === CURRENT_STATE.OFF"
         >
           <ClockCircleOutlined />
         </TagState>

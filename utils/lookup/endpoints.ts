@@ -26,6 +26,7 @@ const parseParams = (params?: any): string => {
 export const ENDPOINTS = Object.freeze({
   schedule: {
     query: (query: any) => `/schedule/${query}`,
+    create: "/schedule",
   },
   auth: {
     signIn: "/auth/login",
