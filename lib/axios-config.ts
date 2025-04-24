@@ -17,7 +17,7 @@ export default defineNuxtPlugin((nuxtApp) => {
     (error: AxiosError) => {
       if (error.response?.status === 401) {
         Cookies.remove("accessToken");
-        window.location.href = "/sign-in";
+        window.location.href = "/login";
       }
 
       const isGetMethod = error.config?.method?.toLowerCase() === "get";

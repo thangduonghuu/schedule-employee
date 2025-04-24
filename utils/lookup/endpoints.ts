@@ -28,6 +28,6 @@ export const ENDPOINTS = Object.freeze({
     query: (query: any) => `/schedule/${query}`,
   },
   auth: {
-    signIn: "/user-api/auth/sign-in-admin",
+    signIn: "/auth/login",
   },
 });

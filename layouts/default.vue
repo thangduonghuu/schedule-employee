@@ -3,11 +3,10 @@ import { AppleOutlined, AndroidOutlined } from "@ant-design/icons-vue";
 
 import { ref } from "vue";
 const activeKey = ref("1");
-
 </script>
 <template>
   <div class="min-h-screen bg-gray-50">
-    <header class="bg-white shadow-sm">
+    <!-- <header class="bg-white shadow-sm">
       <div class="container-custom py-4">
         <nav class="flex items-center justify-between">
           <div class="flex items-center space-x-4">
@@ -23,9 +22,9 @@ const activeKey = ref("1");
           </div>
         </nav>
       </div>
-    </header>
+    </header> -->
 
-    <main class="container-custom w-full">
+    <main class="container-custom h-dvh w-full">
       <slot />
     </main>
   </div>

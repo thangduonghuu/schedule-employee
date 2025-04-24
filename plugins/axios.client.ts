@@ -15,25 +15,25 @@ export default defineNuxtPlugin((nuxtApp) => {
   axiosClient.interceptors.response.use(
     (response) => response.data,
     (error: AxiosError) => {
-      //   if (error.response?.status === 401) {
-      //     Cookies.remove("accessToken");
-      //     window.location.href = "/sign-in";
-      //   }
+      if (error.response?.status === 401) {
+        Cookies.remove("access_token");
+        window.location.href = "/login";
+      }
 
-      // const isGetMethod = error.config?.method?.toLowerCase() === "get";
+      const isGetMethod = error.config?.method?.toLowerCase() === "get";
 
-      // if (isGetMethod) {
-      //   return Promise.reject(error);
-      // }
+      if (isGetMethod) {
+        return Promise.reject(error);
+      }
 
       return Promise.reject(error.response?.data);
     }
   );
 
   axiosClient.interceptors.request.use((request) => {
-    const token = Cookies.get("accessToken");
+    const token = Cookies.get("access_token");
     // if (token)
-    request.headers.Authorization = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRoYW5nLmR1b25nQGV4YW1wbGUuY29tIiwidXNlcklkIjoiNjJjZGU1ODEtNmZmMy00MjU2LThkMWYtZTJlN2Y2MGRiMjNlIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzQ1Mzk0MTM3LCJleHAiOjE3NDUzOTc3Mzd9.ZXwt83FXtzfxyJdHxhcYh5uN4-zsdQwlVS2739mrzwM`;
+    request.headers.Authorization = token;
     request.headers["Cache-Control"] = "no-cache";
     request.headers.Pragma = "no-cache";
     request.headers.Expires = "0";
