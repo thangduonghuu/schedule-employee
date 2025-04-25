@@ -30,5 +30,6 @@ export const ENDPOINTS = Object.freeze({
   },
   auth: {
     signIn: "/auth/login",
+    signUp: "/user",
   },
 });

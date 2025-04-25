@@ -19,3 +19,31 @@ export const Login = async ({
   });
   return response;
 };
+
+export const Register = async ({
+  email,
+  password,
+  firstName,
+  lastName,
+}: {
+  email: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+}) => {
+  const nuxtApp = useNuxtApp(); // Ensure this is called within a valid context
+  const { $axios } = nuxtApp;
+  console.log({
+    email,
+    password,
+    firstName,
+    lastName
+  });
+  const response = await $axios.post(ENDPOINTS.auth.signUp, {
+    email,
+    password,
+    firstName,
+    lastName
+  });
+  return response;
+};

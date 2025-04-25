@@ -3,12 +3,26 @@ definePageMeta({
   middleware: "sign-in",
 });
 
-import { reactive } from "vue";
+import { useMutation } from "@tanstack/vue-query";
+import type { FormInstance, Rule } from "ant-design-vue/es/form";
 import Cookie from "js-cookie";
-import type { RuleObject } from "ant-design-vue/es/form";
+import { reactive } from "vue";
+import { Register } from "~/api/auth";
 
 const showPage = ref(false);
 const router = useRouter();
+const formRef = ref<FormInstance>();
+
+const { mutateAsync: createUserMutation, isPending } = useMutation({
+  mutationFn: Register,
+  onSuccess: () => {
+    message.success("Register successful");
+    router.push("/login");
+  },
+  onError: () => {
+    message.error("Register failed");
+  },
+});
 
 const layout = {
   labelCol: { span: 8 },
@@ -27,26 +41,40 @@ const validateMessages = {
 };
 
 const formState = reactive({
-  user: {
-    name: "",
-    age: undefined,
-    email: "",
-    password: "",
-    confirmPassword: "",
-  },
+  firstName: "",
+  lastName: "",
+  email: "",
+  password: "",
+  checkPass: "",
 });
 const onFinish = (values: any) => {
-  console.log("Success:", values);
+  createUserMutation(values);
 };
 
-const validateConfirmPassword = (rule: RuleObject, value: string) => {
-  if (!value) {
-    return Promise.reject("Please confirm your password");
+const validatePass = async (_rule: Rule, value: string) => {
+  if (value === "") {
+    return Promise.reject("Please input the password");
+  } else {
+    if (formState.checkPass !== "" && formRef.value) {
+      formRef.value.validateFields("checkPass");
+    }
+    return Promise.resolve();
   }
-  if (value !== formState.user.password) {
-    return Promise.reject("Passwords do not match");
+};
+
+const validatePass2 = async (_rule: Rule, value: string) => {
+  if (value === "") {
+    return Promise.reject("Please input the password again");
+  } else if (value !== formState.password) {
+    return Promise.reject("Two inputs don't match!");
+  } else {
+    return Promise.resolve();
   }
-  return Promise.resolve();
+};
+
+const rules: Record<string, Rule[]> = {
+  password: [{ required: true, validator: validatePass, trigger: "change" }],
+  checkPass: [{ required: true, validator: validatePass2, trigger: "change" }],
 };
 
 onMounted(() => {
@@ -69,54 +97,46 @@ onMounted(() => {
       <a-form
         :model="formState"
         v-bind="layout"
+        ref="formRef"
         name="nest-messages"
+        :validate-messages="validateMessages"
+        :rules="rules"
         :label-col="{ span: 8 }"
         :wrapper-col="{ span: 16 }"
-        :validate-messages="validateMessages"
         @finish="onFinish"
       >
-        <a-form-item
-          :name="['user', 'name']"
-          label="Name"
-          :rules="[{ required: true }]"
-        >
-          <a-input v-model:value="formState.user.name" />
+        <a-form-item name="firstName" label="First Name" :rules="[{ required: true }]">
+          <a-input v-model:value="formState.firstName" />
+        </a-form-item>
+        <a-form-item name="lastName" label="Last Name" :rules="[{ required: true }]">
+          <a-input v-model:value="formState.lastName" />
         </a-form-item>
         <a-form-item
-          :name="['user', 'email']"
+          name="email"
           label="Email"
           :rules="[{ type: 'email', required: true }]"
         >
-          <a-input v-model:value="formState.user.email" />
+          <a-input v-model:value="formState.email" />
         </a-form-item>
-        <a-form-item
-          :name="['user', 'password']"
-          label="Password"
-          :rules="[{ type: 'string', required: true }]"
-        >
-          <template #prefix>
-            <LockOutlined class="site-form-item-icon" />
-          </template>
-          <a-input v-model:value="formState.user.password" />
+        <a-form-item has-feedback label="Password" name="password">
+          <a-input
+            v-model:value="formState.password"
+            type="password"
+            autocomplete="off"
+          />
         </a-form-item>
-        <a-form-item
-          :name="['user', 'confirmPassword']"
-          label="Confirm Password"
-          :rules="[
-            { type: 'string', required: true },
-            {
-              validator: validateConfirmPassword,
-            },
-          ]"
-        >
-          <template #prefix>
-            <LockOutlined class="site-form-item-icon" />
-          </template>
-          <a-input v-model:value="formState.user.confirmPassword" />
+        <a-form-item has-feedback label="Confirm password" name="checkPass">
+          <a-input
+            v-model:value="formState.checkPass"
+            type="password"
+            autocomplete="off"
+          />
         </a-form-item>
+
         <a-form-item :wrapper-col="{ ...layout.wrapperCol, offset: 8 }">
           <a-button
             html-type="submit"
+            :loading="isPending"
             type="primary"
             class="py-5 rounded-full flex items-center gap-1"
           >
