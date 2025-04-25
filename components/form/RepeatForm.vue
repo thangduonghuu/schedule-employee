@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useMutation } from "@tanstack/vue-query";
+import { useMutation, useQueryClient } from "@tanstack/vue-query";
 import { Field, useField, useForm } from "vee-validate";
 import { repeatSchedule } from "~/api/schedule";
 import { schemaRepeatForm } from "~/schema/repeatForm.schema";
@@ -22,36 +22,38 @@ const props = defineProps({
     default: false,
   },
 });
+const queryClient = useQueryClient();
 
 const { mutateAsync: repeatScheduleMutate, isPending } = useMutation({
   mutationFn: repeatSchedule,
   onSuccess: () => {
     message.success("Repeat Schedule successful");
-    props.onCloseModal()
+    props.onCloseModal();
     props.refetch();
+    queryClient.invalidateQueries();
   },
   onError: () => {
     message.error("Repeat Schedule failed");
   },
 });
 
-const { handleSubmit, errors } = useForm({
+const { handleSubmit } = useForm({
   validationSchema: schemaRepeatForm,
   initialValues: {
     week: props.week,
   },
 });
 
-
 const { handleChange: handleChangeNumberWeek } = useField("numberWeekRepeat");
 const { handleChange } = useField("changeToType");
 
 const handleOk = handleSubmit((value) => {
-  repeatScheduleMutate(value)
+  repeatScheduleMutate(value);
 });
 </script>
 <template>
   <a-modal
+    :closable="false"
     :open="open"
     :footer="false"
     title="Repeat the schedule"
@@ -66,7 +68,13 @@ const handleOk = handleSubmit((value) => {
           <div class="flex align-center gap-2">
             <p>Repeat for</p>
             <Field name="numberWeekRepeat">
-              <a-input-number id="inputNumber" @change="handleChangeNumberWeek" :min="1" :max="7" />
+              <a-input-number
+                id="inputNumber"
+                :defaultValue="1"
+                @change="handleChangeNumberWeek"
+                :min="1"
+                :max="7"
+              />
             </Field>
             <a-typography>weeks (max 7)</a-typography>
           </div>
@@ -153,8 +161,14 @@ const handleOk = handleSubmit((value) => {
           </Field>
         </div>
         <div class="flex gap-2 pt-4 justify-end">
-          <a-button @click="$emit('close')">Cancel</a-button>
-          <a-button :loading="isPending" html-type="submit" type="primary" @click="handleOk"
+          <a-button :disabled="isPending" @click="props.onCloseModal()"
+            >Cancel</a-button
+          >
+          <a-button
+            :loading="isPending"
+            html-type="submit"
+            type="primary"
+            @click="handleOk"
             >OK</a-button
           >
         </div>
