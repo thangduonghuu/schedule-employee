@@ -2,7 +2,7 @@
 import { LeftOutlined, RightOutlined } from "@ant-design/icons-vue";
 import { useMutation } from "@tanstack/vue-query";
 import { addDays, addWeeks, format, startOfWeek, subWeeks } from "date-fns";
-import { Field, Form, useField, useForm } from "vee-validate";
+import { Field, useField, useForm } from "vee-validate";
 import Loading from "~/components/Loading.vue";
 import { useFetchSchedule } from "~/hooks/schedule";
 import { fullSchema } from "~/schema/schedule.schema";
@@ -14,10 +14,11 @@ const weekDays = ref<string[]>([]);
 const currentDate = ref(new Date());
 const open = ref<boolean>(false);
 
-const weekNumber = ref<string>();
+const weekNumber = ref<string>(format(new Date(), "yyyy-'w'ww"));
 
-const { data, isFetching: loading } = useFetchSchedule(weekNumber);
-const { handleSubmit, errors, setFieldValue } = useForm({
+const { data, isFetching: loading, refetch } = useFetchSchedule(weekNumber);
+
+const { handleSubmit, setFieldValue  , resetField } = useForm({
   validationSchema: fullSchema,
   initialValues: {
     isHalfSchedule: scheduleForHalfDay.value,
@@ -35,48 +36,32 @@ watch(data, () => {
   }
 });
 
-watch(errors, () => {
-  if (errors.value) {
-    console.log("Form errors", errors.value);
-  }
-});
-
 const { mutateAsync: createScheduleMutate, isPending: isPendingCreate } =
   useMutation({
     mutationFn: createSchedule,
     onSuccess: (data) => {
       message.success("Create Schedule successful");
+      refetch()
     },
     onError: () => {
       message.error("Create Schedule failed");
     },
   });
 
-const {
-  value: valueMonday,
-  errorMessage: errorValueMonday,
-  handleChange: handleChangeMonday,
-} = useField("schedule.Monday");
-const {
-  value: valueTuesday,
-  errorMessage: errorValueTuesday,
-  handleChange: handleChangeTuesday,
-} = useField("schedule.Tuesday");
-const {
-  value: valueWednesday,
-  errorMessage: errorValueWednesday,
-  handleChange: handleChangeWednesday,
-} = useField("schedule.Wednesday");
-const {
-  value: valueThursday,
-  errorMessage: errorValueThursday,
-  handleChange: handleChangeThursday,
-} = useField("schedule.Thursday");
-const {
-  value: valueFriday,
-  errorMessage: errorValueFriday,
-  handleChange: handleChangeFriday,
-} = useField("schedule.Friday");
+const { handleChange: handleChangeMonday, validate: validateMonday } =
+  useField("schedule.Monday");
+
+const { handleChange: handleChangeTuesday, validate: validateTuesday } =
+  useField("schedule.Tuesday");
+
+const { handleChange: handleChangeWednesday, validate: validateWednesday } =
+  useField("schedule.Wednesday");
+
+const { handleChange: handleChangeThursday, validate: validateThursday } =
+  useField("schedule.Thursday");
+
+const { handleChange: handleChangeFriday, validate: validateFriday } =
+  useField("schedule.Friday");
 
 const onSubmit = handleSubmit(
   (values) => {
@@ -135,7 +120,7 @@ onMounted(() => {
 onMounted(() => {
   const today = new Date();
   currentDate.value = today;
-  weekNumber.value = format(today, "yyyy-'w'ww");
+  // weekNumber.value = format(today, "yyyy-'w'ww");
 });
 
 updateWeek();
@@ -148,7 +133,6 @@ updateWeek();
         <div class="p-4 flex items-center justify-between">
           <div class="flex items-center gap-3">
             <a-button :disabled="loading" @click="goToToday"> Today</a-button>
-            <!-- <div class="p-2 py-1 bg-white rounded-lg">Today</div> -->
             <div class="flex gap-1">
               <div>
                 <a-button
@@ -257,21 +241,39 @@ updateWeek();
             <div v-if="schedule" class="w-full">
               <a-row type="flex flex-1" :gutter="16">
                 <a-col class="gutter-row" flex="1">
-                  <Field type="text" name="schedule.Monday" v-slot="{ field }">
+                  <Field
+                    type="text"
+                    :keep-value="true"
+                    name="schedule.Monday"
+                    :validate-on-change="true"
+                    v-slot="{ field, errorMessage, validateOnChange }"
+                  >
                     <DateSchedule
                       :is-half-schedule="scheduleForHalfDay"
-                      :handle-change="handleChangeMonday"
-                      :isError="!!errorValueFriday"
+                      :handle-change="(val:any) => {
+                          handleChangeMonday(val);
+                          validateMonday();
+                        }
+                      "
+                      :isError="!!errorMessage"
                       :value="field.value"
                     />
                   </Field>
                 </a-col>
                 <a-col class="gutter-row" flex="1">
-                  <Field type="text" name="schedule.Tuesday" v-slot="{ field }">
+                  <Field
+                    type="text"
+                    name="schedule.Tuesday"
+                    v-slot="{ field, errorMessage }"
+                  >
                     <DateSchedule
                       :is-half-schedule="scheduleForHalfDay"
-                      :isError="!!errorValueFriday"
-                      :handle-change="handleChangeTuesday"
+                      :isError="!!errorMessage"
+                      :handle-change="(val:any) => {
+                          handleChangeTuesday(val);
+                          validateTuesday();
+                        }
+                      "
                       :value="field.value"
                     />
                   </Field>
@@ -280,12 +282,15 @@ updateWeek();
                   <Field
                     type="text"
                     name="schedule.Wednesday"
-                    v-slot="{ field }"
+                    v-slot="{ field, errorMessage }"
                   >
                     <DateSchedule
                       :is-half-schedule="scheduleForHalfDay"
-                      :handle-change="handleChangeWednesday"
-                      :isError="!!errorValueFriday"
+                      :handle-change="(val:any) => {
+                        handleChangeWednesday(val);
+                        validateWednesday();
+                      }"
+                      :isError="!!errorMessage"
                       :value="field.value"
                     />
                   </Field>
@@ -294,22 +299,32 @@ updateWeek();
                   <Field
                     type="text"
                     name="schedule.Thursday"
-                    v-slot="{ field }"
+                    v-slot="{ field, errorMessage }"
                   >
                     <DateSchedule
                       :is-half-schedule="scheduleForHalfDay"
-                      :isError="!!errorValueFriday"
-                      :handle-change="handleChangeThursday"
+                      :isError="!!errorMessage"
+                      :handle-change="( val:any) => {
+                        handleChangeThursday(val);
+                        validateThursday();
+                      }"
                       :value="field.value"
                     />
                   </Field>
                 </a-col>
                 <a-col class="gutter-row" flex="1">
-                  <Field type="text" name="schedule.Friday" v-slot="{ field }">
+                  <Field
+                    type="text"
+                    name="schedule.Friday"
+                    v-slot="{ field, errorMessage }"
+                  >
                     <DateSchedule
                       :is-half-schedule="scheduleForHalfDay"
-                      :handle-change="handleChangeFriday"
-                      :isError="!!errorValueFriday"
+                      :handle-change="( val:any) => {
+                        handleChangeFriday(val);
+                        validateFriday();
+                      }"
+                      :isError="!!errorMessage"
                       :value="field.value"
                     />
                   </Field>

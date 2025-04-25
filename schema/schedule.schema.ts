@@ -1,30 +1,37 @@
 import * as yup from "yup";
 
-const sessionSchema = yup.object({
-  am: yup.string().required(),
-  amState: yup.string().when("am", (am, schema) => {
-    return am[0] === "WFO"
-      ? schema.required(
-          "Seat is required when working at office in the morning"
-        )
-      : schema.notRequired();
-  }),
-  pm: yup.string().required(),
-  pmState: yup.string().when("pm", (pm, schema) => {
-    return pm[0] === "WFO"
-      ? schema.required(
-          "Seat is required when working at office in the afternoon"
-        )
-      : schema.notRequired();
-  }),
-});
+// Base session schema without pm conditional
+const getSessionSchema = (isHalf: boolean) =>
+  yup.object({
+    am: yup.string().required(),
+    amState: yup.string().when("am", (am, schema) => {
+      return am[0] === "WFO"
+        ? schema.required(
+            "Seat is required when working at office in the morning"
+          )
+        : schema.notRequired();
+    }),
+    pm: isHalf
+      ? yup.string().required("PM is required for half schedule")
+      : yup.string(),
+    pmState: yup.string().when("pm", (pm, schema) => {
+      return pm[0] === "WFO"
+        ? schema.required(
+            "Seat is required when working at office in the afternoon"
+          )
+        : schema.notRequired();
+    }),
+  });
 
-const scheduleSchema = yup.object({
-  Monday: sessionSchema.required(),
-  Tuesday: sessionSchema.required(),
-  Wednesday: sessionSchema.required(),
-  Thursday: sessionSchema.required(),
-  Friday: sessionSchema.required(),
+const scheduleSchema = yup.lazy((value, { parent }) => {
+  const isHalf = parent?.isHalfSchedule;
+  return yup.object({
+    Monday: getSessionSchema(isHalf).required(),
+    Tuesday: getSessionSchema(isHalf).required(),
+    Wednesday: getSessionSchema(isHalf).required(),
+    Thursday: getSessionSchema(isHalf).required(),
+    Friday: getSessionSchema(isHalf).required(),
+  });
 });
 
 export const fullSchema = yup.object({

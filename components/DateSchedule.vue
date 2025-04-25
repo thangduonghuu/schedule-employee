@@ -24,6 +24,7 @@ defineProps({
     default: () => {},
   },
 });
+
 </script>
 
 <template>
@@ -31,7 +32,11 @@ defineProps({
     <div>
       <Card
         :state="value.am"
+        :selectValue="value.amState"
         :isError="isError"
+        :handleSelectRoom="(seat: string)=> {
+          handleChange({...value, amState: seat })
+        }"
         :handleClick="
           (am: string) => {
             handleChange({
@@ -46,6 +51,10 @@ defineProps({
       <Card
         :state="value.pm"
         :isError="isError"
+        :selectValue="value.pmState"
+        :handleSelectRoom="(seat: string)=> {
+          handleChange({...value, pmState: seat })
+        }"
         :handleClick="
           (pm: string) => {
             handleChange({
@@ -59,7 +68,22 @@ defineProps({
   </div>
   <div v-if="!isHalfSchedule">
     <div>
-      <Card />
+      <Card
+        :state="value.am"
+        :isError="isError"
+        :selectValue="value.amState"
+        :handleSelectRoom="(seat: string)=> {
+          handleChange({...value, amState: seat })
+        }"
+        :handleClick="
+          (am: string) => {
+            handleChange({
+              ...value,
+              am,
+            });
+          }
+        "
+      />
     </div>
   </div>
 </template>

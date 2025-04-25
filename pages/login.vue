@@ -32,7 +32,7 @@ const { mutateAsync: login, isPending: isPendingCreate } = useMutation({
     Cookie.set("access_token", data.token, {
       expires: 1,
     });
-    navigateTo('/')
+    navigateTo("/");
     message.success("Login successful");
   },
   onError: () => {
@@ -42,6 +42,10 @@ const { mutateAsync: login, isPending: isPendingCreate } = useMutation({
 
 const onFinishFailed = (errorInfo: any) => {
   console.log("Failed:", errorInfo);
+};
+
+const goToRegister = () => {
+  router.push("/register");
 };
 
 onMounted(() => {
@@ -62,6 +66,7 @@ onMounted(() => {
     <div class="p-12 bg-violet-300 rounded-2xl shadow-lg">
       <h1 class="text-2xl w-[350px] font-bold text-center mb-4">Login</h1>
       <a-form
+        :layout="'horizontal'"
         :model="formState"
         name="basic"
         :label-col="{ span: 8 }"
@@ -73,7 +78,7 @@ onMounted(() => {
         <a-form-item
           label="Email"
           name="email"
-          :rules="[{ required: true, message: 'Please input your username!' }]"
+          :rules="[{ required: true, message: 'Please input your email!', type: 'email' }]"
         >
           <a-input v-model:value="formState.email" />
         </a-form-item>
@@ -85,7 +90,14 @@ onMounted(() => {
         >
           <a-input-password v-model:value="formState.password" />
         </a-form-item>
-
+        <a-form-item :wrapper-col="{ offset: 8, span: 16 }">
+          <a-typography-text
+            @click="goToRegister"
+            style="cursor: pointer; color: #1890ff"
+          >
+            Don't have an account? Register
+          </a-typography-text>
+        </a-form-item>
         <a-form-item :wrapper-col="{ offset: 8, span: 16 }">
           <a-button :loading="isPendingCreate" type="primary" html-type="submit"
             >Submit</a-button

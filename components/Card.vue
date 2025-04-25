@@ -6,8 +6,9 @@ import {
 } from "@ant-design/icons-vue";
 import { CURRENT_STATE } from "~/utils/enum/state";
 import type { PropType } from "vue";
+import type { SelectProps } from "ant-design-vue";
 
-defineProps({
+const props = defineProps({
   isError: {
     type: Boolean,
     default: false,
@@ -16,18 +17,39 @@ defineProps({
     type: Function,
     default: () => {},
   },
+  selectValue: {
+    type: String,
+    default: "",
+  },
   state: {
     type: Object as PropType<CURRENT_STATE>,
     default: CURRENT_STATE.WFH,
   },
+  handleSelectRoom: {
+    type: Function,
+    default: () => {},
+  },
 });
+const value = ref<string | undefined>(props.selectValue);
 
-const optionSelected = ref([]);
+watch(
+  () => props.selectValue,
+  (newValue) => {
+    value.value = newValue;
+  },
+  { immediate: true }
+);
 
-const options = [...Array(25)].map((_, i) => ({
-  value: (i + 10).toString(36) + (i + 1),
-}));
-</script>
+const filterOption = (input: string, option: any) => {
+  return option.value.toLowerCase().indexOf(input.toLowerCase()) >= 0;
+};
+
+const options = ref<SelectProps["options"]>([
+  { value: "camp1", label: "F2-Camp1" },
+  { value: "camp2", label: "F3-Camp2" },
+  { value: "camp3", label: "F4-Camp3" },
+]);
+</script> 
 
 <template>
   <div class="flex items-center justify-center h-full">
@@ -35,14 +57,16 @@ const options = [...Array(25)].map((_, i) => ({
       <a-typography-title class="text-center" :level="4">{{
         state
       }}</a-typography-title>
-      <a-select
-        v-if="state === CURRENT_STATE.WFO"
-        v-model:value="optionSelected"
-        mode="tags"
-        status="error"
-        style="width: 100%"
-        placeholder="Tags Mode"
+      <a-select 
+        v-model:value="value"
+        :style="state === CURRENT_STATE.WFO ? 'visibility: visible' :'visibility: hidden'"
+        show-search
+        :status="isError ? 'error' : ''"
+        placeholder="Select a person"
+        style="width: 200px"
         :options="options"
+        :filter-option="filterOption"
+        @change="handleSelectRoom"
       ></a-select>
       <div class="flex gap-1">
         <TagState
