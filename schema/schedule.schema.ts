@@ -5,7 +5,7 @@ const getSessionSchema = (isHalf: boolean) =>
   yup.object({
     am: yup.string().required(),
     amState: yup.string().when("am", (am, schema) => {
-      return am[0] === "WFO"
+      return am[0] === "WAO"
         ? schema.required(
             "Seat is required when working at office in the morning"
           )
@@ -13,9 +13,9 @@ const getSessionSchema = (isHalf: boolean) =>
     }),
     pm: isHalf
       ? yup.string().required("PM is required for half schedule")
-      : yup.string(),
+      : yup.string().optional(),
     pmState: yup.string().when("pm", (pm, schema) => {
-      return pm[0] === "WFO"
+      return pm[0] === "WAO"
         ? schema.required(
             "Seat is required when working at office in the afternoon"
           )

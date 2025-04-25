@@ -59,7 +59,7 @@ const options = ref<SelectProps["options"]>([
       }}</a-typography-title>
       <a-select 
         v-model:value="value"
-        :style="state === CURRENT_STATE.WFO ? 'visibility: visible' :'visibility: hidden'"
+        :style="state === CURRENT_STATE.WAO ? 'visibility: visible' :'visibility: hidden'"
         show-search
         :status="isError ? 'error' : ''"
         placeholder="Select a person"
@@ -71,9 +71,9 @@ const options = ref<SelectProps["options"]>([
       <div class="flex gap-1">
         <TagState
           :color="'bg-blue-500'"
-          @click="handleClick(CURRENT_STATE.WFO)"
-          :state="CURRENT_STATE.WFO"
-          :isSelected="state === CURRENT_STATE.WFO"
+          @click="handleClick(CURRENT_STATE.WAO)"
+          :state="CURRENT_STATE.WAO"
+          :isSelected="state === CURRENT_STATE.WAO"
         >
           <LaptopOutlined />
         </TagState>

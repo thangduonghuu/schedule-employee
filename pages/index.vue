@@ -6,7 +6,12 @@ import { Field, useField, useForm, useIsFormDirty } from "vee-validate";
 import Loading from "~/components/Loading.vue";
 import { useFetchSchedule } from "~/hooks/schedule";
 import { fullSchema } from "~/schema/schedule.schema";
-import { createSchedule } from "../api/schedule";
+import { createSchedule, repeatSchedule } from "../api/schedule";
+import {
+  DefaultValueFullSchedule,
+  DefaultValueHalfSchedule,
+} from "~/utils/lookup/constants";
+import RepeatForm from "~/components/form/RepeatForm.vue";
 
 const scheduleForHalfDay = ref<boolean>(false);
 const schedule = ref();
@@ -19,12 +24,26 @@ const weekNumber = ref<string>(format(new Date(), "yyyy-'w'ww"));
 
 const { data, isFetching: loading, refetch } = useFetchSchedule(weekNumber);
 
-const { handleSubmit, meta, resetForm } = useForm({
-  validationSchema: fullSchema,
-  initialValues: {
-    isHalfSchedule: scheduleForHalfDay.value,
-    schedule: schedule.value,
-  },
+const { handleSubmit, setFieldValue, meta, resetForm, errors, values } =
+  useForm({
+    validationSchema: fullSchema,
+    initialValues: {
+      isHalfSchedule: scheduleForHalfDay.value,
+      schedule: schedule.value,
+    },
+  });
+
+watch(values, () => {
+  if (values.isHalfSchedule) {
+    scheduleForHalfDay.value = values.isHalfSchedule;
+  }
+});
+
+watch(meta, () => {
+  console.log("errors.value", errors.value);
+  console.log("meta.value", meta.value.initialValues);
+  if (errors.value) {
+  }
 });
 
 watch(data, () => {
@@ -42,10 +61,9 @@ watch(data, () => {
 });
 
 watch(meta, (newValue) => {
-  if(meta.value) {
+  if (meta.value) {
     isFormDirty.value = newValue.dirty;
   }
-  // console.log(meta.value);
 });
 
 const { mutateAsync: createScheduleMutate, isPending: isPendingCreate } =
@@ -91,10 +109,6 @@ const showModal = () => {
   open.value = true;
 };
 
-const handleOk = (e: MouseEvent) => {
-  open.value = false;
-};
-
 const updateWeek = () => {
   const start = startOfWeek(currentDate.value, { weekStartsOn: 0 }); // 1 for Monday start
   weekDays.value = Array.from({ length: 7 }, (_, i) =>
@@ -108,6 +122,23 @@ const goToNextWeek = () => {
   updateWeek();
 };
 
+const onChangeModeToHalfSchedule = () => {
+  scheduleForHalfDay.value = !scheduleForHalfDay.value;
+
+  setFieldValue("isHalfSchedule", scheduleForHalfDay.value);
+
+  if (scheduleForHalfDay.value === meta.value.initialValues?.isHalfSchedule) {
+    resetForm();
+  }
+  if (scheduleForHalfDay.value) {
+    setFieldValue("isHalfSchedule", DefaultValueHalfSchedule.isHalfSchedule);
+    setFieldValue("schedule", DefaultValueHalfSchedule.schedule);
+  } else {
+    setFieldValue("isHalfSchedule", DefaultValueFullSchedule.isHalfSchedule);
+    setFieldValue("schedule", DefaultValueFullSchedule.schedule);
+  }
+};
+
 const goToPreviousWeek = () => {
   currentDate.value = subWeeks(currentDate.value, 1);
   weekNumber.value = format(currentDate.value, "yyyy-'w'ww");
@@ -118,6 +149,10 @@ const goToToday = () => {
   currentDate.value = new Date();
   weekNumber.value = format(currentDate.value, "yyyy-'w'ww");
   updateWeek();
+};
+
+const onCloseModal = () => {
+  open.value = false;
 };
 
 onMounted(() => {
@@ -174,7 +209,7 @@ updateWeek();
             >
             <a-button
               class="btn py-5 rounded-full"
-              @click="scheduleForHalfDay = !scheduleForHalfDay"
+              @click="onChangeModeToHalfSchedule"
             >
               {{
                 scheduleForHalfDay
@@ -358,6 +393,11 @@ updateWeek();
           </a-button>
           <div class="flex gap-1">
             <a-button
+              @click="
+                () => {
+                  resetForm();
+                }
+              "
               :disabled="loading || !isFormDirty"
               class="py-5 rounded-full flex items-center gap-1"
             >
@@ -375,11 +415,8 @@ updateWeek();
         </div>
       </section>
     </form>
-    <a-modal v-model:open="open" title="Basic Modal" @ok="handleOk">
-      <p>Some contents...</p>
-      <p>Some contents...</p>
-      <p>Some contents...</p>
-    </a-modal>
+
+    <RepeatForm :open="open" :week="weekNumber" :on-close-modal="onCloseModal" :refetch="refetch" />
   </div>
 </template>
 

@@ -15,3 +15,11 @@ export const createSchedule = async (data: {}) => {
   const response = await $axios.post(ENDPOINTS.schedule.create, data);
   return response;
 }
+
+export const repeatSchedule = async (data: {}) => {
+  const nuxtApp = useNuxtApp(); // Ensure this is called within a valid context
+  const { $axios } = nuxtApp;
+
+  const response = await $axios.post(ENDPOINTS.schedule.repeat, data);
+  return response;
+}

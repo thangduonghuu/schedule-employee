@@ -27,6 +27,7 @@ export const ENDPOINTS = Object.freeze({
   schedule: {
     query: (query: any) => `/schedule/${query}`,
     create: "/schedule",
+    repeat: "/schedule/repeat-week",
   },
   auth: {
     signIn: "/auth/login",
