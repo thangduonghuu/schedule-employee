@@ -2,7 +2,7 @@
 import { LeftOutlined, RightOutlined } from "@ant-design/icons-vue";
 import { useMutation } from "@tanstack/vue-query";
 import { addDays, addWeeks, format, startOfWeek, subWeeks } from "date-fns";
-import { Field, useField, useForm } from "vee-validate";
+import { Field, useField, useForm, useIsFormDirty } from "vee-validate";
 import Loading from "~/components/Loading.vue";
 import { useFetchSchedule } from "~/hooks/schedule";
 import { fullSchema } from "~/schema/schedule.schema";
@@ -13,12 +13,13 @@ const schedule = ref();
 const weekDays = ref<string[]>([]);
 const currentDate = ref(new Date());
 const open = ref<boolean>(false);
+const isFormDirty = ref<boolean>(false);
 
 const weekNumber = ref<string>(format(new Date(), "yyyy-'w'ww"));
 
 const { data, isFetching: loading, refetch } = useFetchSchedule(weekNumber);
 
-const { handleSubmit, setFieldValue  , resetField } = useForm({
+const { handleSubmit, meta, resetForm } = useForm({
   validationSchema: fullSchema,
   initialValues: {
     isHalfSchedule: scheduleForHalfDay.value,
@@ -31,9 +32,20 @@ watch(data, () => {
     scheduleForHalfDay.value = data.value.isHalfSchedule;
     schedule.value = data.value.schedule;
 
-    setFieldValue("schedule", data.value.schedule);
-    setFieldValue("isHalfSchedule", data.value.isHalfSchedule);
+    resetForm({
+      values: {
+        isHalfSchedule: data.value.isHalfSchedule,
+        schedule: data.value.schedule,
+      },
+    });
   }
+});
+
+watch(meta, (newValue) => {
+  if(meta.value) {
+    isFormDirty.value = newValue.dirty;
+  }
+  // console.log(meta.value);
 });
 
 const { mutateAsync: createScheduleMutate, isPending: isPendingCreate } =
@@ -41,7 +53,7 @@ const { mutateAsync: createScheduleMutate, isPending: isPendingCreate } =
     mutationFn: createSchedule,
     onSuccess: (data) => {
       message.success("Create Schedule successful");
-      refetch()
+      refetch();
     },
     onError: () => {
       message.error("Create Schedule failed");
@@ -120,7 +132,6 @@ onMounted(() => {
 onMounted(() => {
   const today = new Date();
   currentDate.value = today;
-  // weekNumber.value = format(today, "yyyy-'w'ww");
 });
 
 updateWeek();
@@ -347,7 +358,7 @@ updateWeek();
           </a-button>
           <div class="flex gap-1">
             <a-button
-              :disabled="loading"
+              :disabled="loading || !isFormDirty"
               class="py-5 rounded-full flex items-center gap-1"
             >
               reset
