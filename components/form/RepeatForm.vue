@@ -42,12 +42,6 @@ const { handleSubmit, errors } = useForm({
   },
 });
 
-watch(errors, () => {
-  if (errors.value) {
-    console.log(errors.value);
-    // message.error(errors);
-  }
-});
 
 const { handleChange: handleChangeNumberWeek } = useField("numberWeekRepeat");
 const { handleChange } = useField("changeToType");

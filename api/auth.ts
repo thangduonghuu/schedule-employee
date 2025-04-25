@@ -9,10 +9,6 @@ export const Login = async ({
 }) => {
   const nuxtApp = useNuxtApp(); // Ensure this is called within a valid context
   const { $axios } = nuxtApp;
-  console.log({
-    email,
-    password,
-  });
   const response = await $axios.post(ENDPOINTS.auth.signIn, {
     email,
     password,
@@ -33,12 +29,6 @@ export const Register = async ({
 }) => {
   const nuxtApp = useNuxtApp(); // Ensure this is called within a valid context
   const { $axios } = nuxtApp;
-  console.log({
-    email,
-    password,
-    firstName,
-    lastName
-  });
   const response = await $axios.post(ENDPOINTS.auth.signUp, {
     email,
     password,

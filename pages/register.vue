@@ -24,11 +24,6 @@ const { mutateAsync: createUserMutation, isPending } = useMutation({
   },
 });
 
-const layout = {
-  labelCol: { span: 8 },
-  wrapperCol: { span: 16 },
-};
-
 const validateMessages = {
   required: "${label} is required!",
   types: {
@@ -92,23 +87,29 @@ onMounted(() => {
     v-if="showPage"
     class="flex items-center h-full justify-center bg-gray-50"
   >
-    <div class="p-12 w-[500px] bg-violet-300 rounded-2xl shadow-lg">
+    <div class="p-8 pb-0 w-[500px] bg-violet-300 rounded-2xl shadow-lg">
       <h1 class="text-2xl font-bold text-center mb-4 text-white">Register</h1>
       <a-form
         :model="formState"
-        v-bind="layout"
+        layout="vertical"
         ref="formRef"
         name="nest-messages"
         :validate-messages="validateMessages"
         :rules="rules"
-        :label-col="{ span: 8 }"
-        :wrapper-col="{ span: 16 }"
         @finish="onFinish"
       >
-        <a-form-item name="firstName" label="First Name" :rules="[{ required: true }]">
+        <a-form-item
+          name="firstName"
+          label="First Name"
+          :rules="[{ required: true }]"
+        >
           <a-input v-model:value="formState.firstName" />
         </a-form-item>
-        <a-form-item name="lastName" label="Last Name" :rules="[{ required: true }]">
+        <a-form-item
+          name="lastName"
+          label="Last Name"
+          :rules="[{ required: true }]"
+        >
           <a-input v-model:value="formState.lastName" />
         </a-form-item>
         <a-form-item
@@ -133,12 +134,11 @@ onMounted(() => {
           />
         </a-form-item>
 
-        <a-form-item :wrapper-col="{ ...layout.wrapperCol, offset: 8 }">
+        <a-form-item :wrapper-col="{ offset: 8 }">
           <a-button
+            type="primary"
             html-type="submit"
             :loading="isPending"
-            type="primary"
-            class="py-5 rounded-full flex items-center gap-1"
           >
             Register
           </a-button>

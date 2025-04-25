@@ -40,9 +40,7 @@ const { mutateAsync: login, isPending: isPendingCreate } = useMutation({
   },
 });
 
-const onFinishFailed = (errorInfo: any) => {
-  console.log("Failed:", errorInfo);
-};
+const onFinishFailed = (errorInfo: any) => {};
 
 const goToRegister = () => {
   router.push("/register");
@@ -61,16 +59,13 @@ onMounted(() => {
 <template>
   <div
     v-if="showPage"
-    class="flex items-center h-full justify-center bg-gray-50"
+    class="flex items-center gap-2 flex-col h-full justify-center bg-gray-50"
   >
-    <div class="p-12 bg-violet-300 rounded-2xl shadow-lg">
+    <div class="p-8 pb-0 bg-violet-300 rounded-2xl shadow-lg">
       <h1 class="text-2xl w-[350px] font-bold text-center mb-4">Login</h1>
       <a-form
-        :layout="'horizontal'"
+        layout="vertical"
         :model="formState"
-        name="basic"
-        :label-col="{ span: 8 }"
-        :wrapper-col="{ span: 16 }"
         autocomplete="off"
         @finish="onFinish"
         @finishFailed="onFinishFailed"
@@ -78,7 +73,13 @@ onMounted(() => {
         <a-form-item
           label="Email"
           name="email"
-          :rules="[{ required: true, message: 'Please input your email!', type: 'email' }]"
+          :rules="[
+            {
+              required: true,
+              message: 'Please input your email!',
+              type: 'email',
+            },
+          ]"
         >
           <a-input v-model:value="formState.email" />
         </a-form-item>
@@ -91,19 +92,20 @@ onMounted(() => {
           <a-input-password v-model:value="formState.password" />
         </a-form-item>
         <a-form-item :wrapper-col="{ offset: 8, span: 16 }">
-          <a-typography-text
-            @click="goToRegister"
-            style="cursor: pointer; color: #1890ff"
-          >
-            Don't have an account? Register
-          </a-typography-text>
-        </a-form-item>
-        <a-form-item :wrapper-col="{ offset: 8, span: 16 }">
           <a-button :loading="isPendingCreate" type="primary" html-type="submit"
             >Submit</a-button
           >
         </a-form-item>
       </a-form>
     </div>
+    <a-typography-text style="color: #6b7280"
+      >Don't have an account?
+    </a-typography-text>
+    <a-typography-text
+      @click="goToRegister"
+      style="cursor: pointer; color: #1890ff"
+    >
+      Register
+    </a-typography-text>
   </div>
 </template>

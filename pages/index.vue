@@ -39,13 +39,6 @@ watch(values, () => {
   }
 });
 
-watch(meta, () => {
-  console.log("errors.value", errors.value);
-  console.log("meta.value", meta.value.initialValues);
-  if (errors.value) {
-  }
-});
-
 watch(data, () => {
   if (data.value) {
     scheduleForHalfDay.value = data.value.isHalfSchedule;
@@ -129,6 +122,7 @@ const onChangeModeToHalfSchedule = () => {
 
   if (scheduleForHalfDay.value === meta.value.initialValues?.isHalfSchedule) {
     resetForm();
+    return;
   }
   if (scheduleForHalfDay.value) {
     setFieldValue("isHalfSchedule", DefaultValueHalfSchedule.isHalfSchedule);
@@ -191,6 +185,7 @@ updateWeek();
               </div>
               <div>
                 <a-button
+                  :disabled="loading"
                   class="btn custom-icon"
                   shape="circle"
                   :icon="h(RightOutlined)"
@@ -382,6 +377,7 @@ updateWeek();
 
         <div class="p-4 flex justify-between">
           <a-button
+            :disabled="isPendingCreate || loading"
             class="btn py-5 rounded-full flex items-center gap-1"
             @click="showModal"
           >
@@ -398,7 +394,7 @@ updateWeek();
                   resetForm();
                 }
               "
-              :disabled="loading || !isFormDirty"
+              :disabled="loading || !isFormDirty || isPendingCreate"
               class="py-5 rounded-full flex items-center gap-1"
             >
               reset
@@ -416,7 +412,12 @@ updateWeek();
       </section>
     </form>
 
-    <RepeatForm :open="open" :week="weekNumber" :on-close-modal="onCloseModal" :refetch="refetch" />
+    <RepeatForm
+      :open="open"
+      :week="weekNumber"
+      :on-close-modal="onCloseModal"
+      :refetch="refetch"
+    />
   </div>
 </template>
 
