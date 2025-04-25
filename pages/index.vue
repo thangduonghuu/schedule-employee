@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { LeftOutlined, RightOutlined } from "@ant-design/icons-vue";
+import { useMutation } from "@tanstack/vue-query";
 import { addDays, addWeeks, format, startOfWeek, subWeeks } from "date-fns";
 import { Field, Form, useField, useForm } from "vee-validate";
 import Loading from "~/components/Loading.vue";
 import { useFetchSchedule } from "~/hooks/schedule";
 import { fullSchema } from "~/schema/schedule.schema";
+import { createSchedule } from "../api/schedule";
 
 const scheduleForHalfDay = ref<boolean>(false);
 const schedule = ref();
@@ -39,6 +41,17 @@ watch(errors, () => {
   }
 });
 
+const { mutateAsync: createScheduleMutate, isPending: isPendingCreate } =
+  useMutation({
+    mutationFn: createSchedule,
+    onSuccess: (data) => {
+      message.success("Create Schedule successful");
+    },
+    onError: () => {
+      message.error("Create Schedule failed");
+    },
+  });
+
 const {
   value: valueMonday,
   errorMessage: errorValueMonday,
@@ -67,7 +80,10 @@ const {
 
 const onSubmit = handleSubmit(
   (values) => {
-    console.log("Form Submitted", values);
+    createScheduleMutate({
+      week: weekNumber.value,
+      ...values,
+    });
   },
   (errors) => {
     message.error("Form submission failed");
@@ -324,7 +340,7 @@ updateWeek();
             <a-button
               type="primary"
               html-type="submit"
-              :disabled="loading"
+              :disabled="loading || isPendingCreate"
               class="py-5 rounded-full flex items-center gap-1"
             >
               Confirm schedule
