@@ -2,16 +2,16 @@
 import { LeftOutlined, RightOutlined } from "@ant-design/icons-vue";
 import { useMutation } from "@tanstack/vue-query";
 import { addDays, addWeeks, format, startOfWeek, subWeeks } from "date-fns";
-import { Field, useField, useForm, useIsFormDirty } from "vee-validate";
+import { Field, useField, useForm } from "vee-validate";
+import RepeatForm from "~/components/form/RepeatForm.vue";
 import Loading from "~/components/Loading.vue";
 import { useFetchSchedule } from "~/hooks/schedule";
 import { fullSchema } from "~/schema/schedule.schema";
-import { createSchedule, repeatSchedule } from "../api/schedule";
 import {
   DefaultValueFullSchedule,
   DefaultValueHalfSchedule,
 } from "~/utils/lookup/constants";
-import RepeatForm from "~/components/form/RepeatForm.vue";
+import { createSchedule } from "../api/schedule";
 
 const scheduleForHalfDay = ref<boolean>(false);
 const schedule = ref();
@@ -288,7 +288,7 @@ updateWeek();
                     :keep-value="true"
                     :validate-on-change="true"
                     name="schedule.Monday"
-                    v-slot="{ field, errorMessage, validateOnChange }"
+                    v-slot="{ field, errorMessage }"
                   >
                     <DateSchedule
                       :is-half-schedule="scheduleForHalfDay"

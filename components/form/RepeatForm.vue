@@ -40,7 +40,7 @@ const { mutateAsync: repeatScheduleMutate, isPending } = useMutation({
   },
 });
 
-const { handleSubmit, setFieldValue } = useForm({
+const { handleSubmit, setFieldValue , resetForm } = useForm({
   name: "repeatSchedule",
   validationSchema: schemaRepeatForm,
   initialValues: {
@@ -48,6 +48,15 @@ const { handleSubmit, setFieldValue } = useForm({
     numberWeekRepeat: 1,
   },
 });
+
+watch(
+  () => props.open,
+  (newVal) => {
+    if (newVal) {
+      resetForm()
+    }
+  }
+);
 
 watch(
   () => props.week,
