@@ -7,7 +7,6 @@
 <script setup lang="ts"></script>
 
 <style scoped lang="scss">
-/* HTML: <div class="loader"></div> */
 .loader {
   width: 50px;
   aspect-ratio: 1;

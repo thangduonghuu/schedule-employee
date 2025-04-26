@@ -8,9 +8,7 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     public: {
-      apiBaseUrl:
-        process.env.API_BASE_URL ||
-        "https://hdtjnfqfb1.execute-api.ap-southeast-2.amazonaws.com/",
+      apiBaseUrl: process.env.API_BASE_URL,
     },
   },
   tailwindcss: {
@@ -20,6 +18,6 @@ export default defineNuxtConfig({
     viewer: true,
   },
   plugins: [
-    "@/plugins/axios.client.ts", // Correct plugin path
+    "@/plugins/axios.client.ts",
   ],
 });

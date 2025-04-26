@@ -34,22 +34,21 @@ const { mutateAsync: repeatScheduleMutate, isPending } = useMutation({
     message.success("Repeat Schedule successful");
     props.onCloseModal();
     queryClient.invalidateQueries();
-    queryClient.refetchQueries()
+    queryClient.refetchQueries();
   },
   onError: () => {
     message.error("Repeat Schedule failed");
   },
 });
 
-const { handleSubmit, errors, setFieldValue } = useForm({
+const { handleSubmit, setFieldValue } = useForm({
   name: "repeatSchedule",
   validationSchema: schemaRepeatForm,
   initialValues: {
     week: props.week,
     numberWeekRepeat: 1,
-  }
+  },
 });
-
 
 watch(
   () => props.week,
