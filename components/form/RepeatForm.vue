@@ -5,7 +5,6 @@ import { Field, useField, useForm } from "vee-validate";
 import { repeatSchedule } from "~/api/schedule";
 import { schemaRepeatForm } from "~/schema/repeatForm.schema";
 import { CURRENT_STATE } from "~/utils/enum/state";
-import { QUERY_KEYS } from "~/utils/lookup/query-key";
 
 const props = defineProps({
   week: {

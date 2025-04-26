@@ -74,6 +74,7 @@ const rules: Record<string, Rule[]> = {
 
 onMounted(() => {
   const token = Cookie.get("access_token");
+  document.title = "Register Page";
   if (token) {
     router.replace("/");
   } else {
@@ -85,10 +86,10 @@ onMounted(() => {
 <template>
   <div
     v-if="showPage"
-    class="flex items-center h-full justify-center bg-gray-50"
+    class="flex items-center h-full justify-center bg-background"
   >
-    <div class="p-8 pb-0 w-[500px] bg-violet-300 rounded-2xl shadow-lg">
-      <h1 class="text-2xl font-bold text-center mb-4 text-white">Register</h1>
+    <div class="p-8 pb-3 w-[500px] bg-custom rounded-2xl shadow-lg">
+      <h1 class="text-2xl font-bold text-center mb-4">Register</h1>
       <a-form
         :model="formState"
         layout="vertical"
@@ -134,8 +135,9 @@ onMounted(() => {
           />
         </a-form-item>
 
-        <a-form-item :wrapper-col="{ offset: 8 }">
+        <a-form-item>
           <a-button
+            class="w-full"
             type="primary"
             html-type="submit"
             :loading="isPending"

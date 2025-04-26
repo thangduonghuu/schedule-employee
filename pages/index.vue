@@ -160,6 +160,7 @@ onMounted(() => {
 onMounted(() => {
   const today = new Date();
   currentDate.value = today;
+  document.title = "Schedule Page";
 });
 
 updateWeek();
@@ -168,7 +169,7 @@ updateWeek();
 <template>
   <div class="flex items-center w-full h-full">
     <form class="w-full" @submit.prevent="onSubmit">
-      <section class="w-full h-full bg-violet-200 rounded-2xl">
+      <section class="w-full h-full bg-custom rounded-2xl">
         <div class="p-4 flex items-center justify-between">
           <div class="flex items-center gap-3">
             <a-button :disabled="loading" @click="goToToday"> Today</a-button>
@@ -222,7 +223,10 @@ updateWeek();
         </div>
 
         <div v-if="!loading" class="p-4 pb-0 flex w-full gap-10">
-          <div class="flex items-center justify-between w-10"></div>
+          <div
+            v-if="scheduleForHalfDay"
+            class="flex items-center justify-between w-10"
+          ></div>
           <div class="w-full">
             <a-row type="flex flex-1" :gutter="16">
               <template v-for="(day, index) in weekDays" :key="index">
@@ -253,11 +257,11 @@ updateWeek();
 
         <div v-if="!loading">
           <div class="p-4 flex w-full gap-10">
-            <div class="flex flex-col justify-around items-center">
-              <div
-                v-if="scheduleForHalfDay"
-                class="flex items-center justify-between"
-              >
+            <div
+              v-if="scheduleForHalfDay"
+              class="flex flex-col justify-around items-center"
+            >
+              <div class="flex items-center justify-between">
                 <div class="p-2 w-10 h-10 bg-white rounded-full box-shadow">
                   <Icon
                     name="solar:sun-line-duotone"

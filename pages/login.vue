@@ -1,6 +1,8 @@
 <script lang="ts" setup>
 definePageMeta({
   middleware: "sign-in",
+  name: "Login",
+  title: "Login Page",
 });
 
 import { useMutation } from "@tanstack/vue-query";
@@ -48,6 +50,7 @@ const goToRegister = () => {
 
 onMounted(() => {
   const token = Cookie.get("access_token");
+  document.title = "Login Page";
   if (token) {
     router.replace("/");
   } else {
@@ -59,9 +62,9 @@ onMounted(() => {
 <template>
   <div
     v-if="showPage"
-    class="flex items-center gap-2 flex-col h-full justify-center bg-gray-50"
+    class="flex items-center gap-2 flex-col h-full justify-center bg-background"
   >
-    <div class="p-8 pb-0 bg-violet-300 rounded-2xl shadow-lg">
+    <div class="p-8 pb-6 bg-custom rounded-2xl shadow-lg">
       <h1 class="text-2xl w-[350px] font-bold text-center mb-4">Login</h1>
       <a-form
         layout="vertical"
@@ -91,21 +94,27 @@ onMounted(() => {
         >
           <a-input-password v-model:value="formState.password" />
         </a-form-item>
-        <a-form-item :wrapper-col="{ offset: 8, span: 16 }">
-          <a-button :loading="isPendingCreate" type="primary" html-type="submit"
+        <a-form-item class="pt-2">
+          <a-button
+            class="w-full"
+            :loading="isPendingCreate"
+            type="primary"
+            html-type="submit"
             >Submit</a-button
           >
         </a-form-item>
       </a-form>
+      <div class="flex gap-2 items-center justify-center">
+        <a-typography-text style="color: #6b7280"
+          >Don't have an account?
+        </a-typography-text>
+        <a-typography-text
+          @click="goToRegister"
+          style="cursor: pointer; color: #1890ff"
+        >
+          Register
+        </a-typography-text>
+      </div>
     </div>
-    <a-typography-text style="color: #6b7280"
-      >Don't have an account?
-    </a-typography-text>
-    <a-typography-text
-      @click="goToRegister"
-      style="cursor: pointer; color: #1890ff"
-    >
-      Register
-    </a-typography-text>
   </div>
 </template>
