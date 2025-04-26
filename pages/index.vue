@@ -408,7 +408,7 @@ updateWeek();
               :disabled="loading || !isFormDirty || isPendingCreate"
               class="py-5 rounded-full flex items-center gap-1"
             >
-              reset
+              Reset
             </a-button>
             <a-button
               type="primary"
