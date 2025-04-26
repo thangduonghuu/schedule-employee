@@ -22,6 +22,7 @@ const props = defineProps({
     default: false,
   },
 });
+
 const queryClient = useQueryClient();
 
 const { mutateAsync: repeatScheduleMutate, isPending } = useMutation({
@@ -37,12 +38,18 @@ const { mutateAsync: repeatScheduleMutate, isPending } = useMutation({
   },
 });
 
-const { handleSubmit } = useForm({
+const { handleSubmit, setFieldValue } = useForm({
   validationSchema: schemaRepeatForm,
-  initialValues: {
-    week: props.week,
-  },
 });
+
+watch(
+  () => props.week,
+  (newVal) => {
+    if (props.week) {
+      setFieldValue("week", newVal);
+    }
+  }
+);
 
 const { handleChange: handleChangeNumberWeek } = useField("numberWeekRepeat");
 const { handleChange } = useField("changeToType");
