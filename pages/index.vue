@@ -199,10 +199,8 @@ updateWeek();
             </div>
           </div>
           <div class="flex gap-1">
-            <a-button class="btn py-5 rounded-full" type="primary">
-              Notify manager</a-button
-            >
             <a-button
+              :disabled="loading || isPendingCreate"
               class="btn py-5 rounded-full"
               @click="onChangeModeToHalfSchedule"
             >
