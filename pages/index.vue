@@ -24,14 +24,14 @@ const weekNumber = ref<string>(format(new Date(), "yyyy-'w'ww"));
 
 const { data, isFetching: loading, refetch } = useFetchSchedule(weekNumber);
 
-const { handleSubmit, setFieldValue, meta, resetForm, errors, values } =
-  useForm({
-    validationSchema: fullSchema,
-    initialValues: {
-      isHalfSchedule: scheduleForHalfDay.value,
-      schedule: schedule.value,
-    },
-  });
+const { handleSubmit, setFieldValue, meta, resetForm, values } = useForm({
+  name: "ScheduleForm",
+  validationSchema: fullSchema,
+  initialValues: {
+    isHalfSchedule: scheduleForHalfDay.value,
+    schedule: schedule.value,
+  },
+});
 
 watch(values, () => {
   if (values.isHalfSchedule) {
@@ -43,7 +43,6 @@ watch(data, () => {
   if (data.value) {
     scheduleForHalfDay.value = data.value.isHalfSchedule;
     schedule.value = data.value.schedule;
-
     resetForm({
       values: {
         isHalfSchedule: data.value.isHalfSchedule,
@@ -285,8 +284,8 @@ updateWeek();
                   <Field
                     type="text"
                     :keep-value="true"
-                    name="schedule.Monday"
                     :validate-on-change="true"
+                    name="schedule.Monday"
                     v-slot="{ field, errorMessage, validateOnChange }"
                   >
                     <DateSchedule
@@ -304,6 +303,8 @@ updateWeek();
                 <a-col class="gutter-row" flex="1">
                   <Field
                     type="text"
+                    :keep-value="true"
+                    :validate-on-change="true"
                     name="schedule.Tuesday"
                     v-slot="{ field, errorMessage }"
                   >
@@ -322,6 +323,8 @@ updateWeek();
                 <a-col class="gutter-row" flex="1">
                   <Field
                     type="text"
+                    :keep-value="true"
+                    :validate-on-change="true"
                     name="schedule.Wednesday"
                     v-slot="{ field, errorMessage }"
                   >
@@ -340,6 +343,8 @@ updateWeek();
                   <Field
                     type="text"
                     name="schedule.Thursday"
+                    :keep-value="true"
+                    :validate-on-change="true"
                     v-slot="{ field, errorMessage }"
                   >
                     <DateSchedule
@@ -356,6 +361,8 @@ updateWeek();
                 <a-col class="gutter-row" flex="1">
                   <Field
                     type="text"
+                    :keep-value="true"
+                    :validate-on-change="true"
                     name="schedule.Friday"
                     v-slot="{ field, errorMessage }"
                   >

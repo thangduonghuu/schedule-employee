@@ -2,7 +2,7 @@
 import Card from "./Card.vue";
 import { defineProps } from "vue";
 
-defineProps({
+const props = defineProps({
   color: {
     type: String,
     default: "bg-blue-500",
@@ -24,7 +24,6 @@ defineProps({
     default: () => {},
   },
 });
-
 </script>
 
 <template>

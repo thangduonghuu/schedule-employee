@@ -1,13 +1,16 @@
 <script setup lang="ts">
 import { useMutation, useQueryClient } from "@tanstack/vue-query";
+import { format } from "date-fns";
 import { Field, useField, useForm } from "vee-validate";
 import { repeatSchedule } from "~/api/schedule";
 import { schemaRepeatForm } from "~/schema/repeatForm.schema";
+import { CURRENT_STATE } from "~/utils/enum/state";
+import { QUERY_KEYS } from "~/utils/lookup/query-key";
 
 const props = defineProps({
   week: {
     type: String,
-    default: "",
+    default: format(new Date(), "yyyy-'w'ww"),
   },
   onCloseModal: {
     type: Function,
@@ -30,17 +33,23 @@ const { mutateAsync: repeatScheduleMutate, isPending } = useMutation({
   onSuccess: () => {
     message.success("Repeat Schedule successful");
     props.onCloseModal();
-    props.refetch();
     queryClient.invalidateQueries();
+    queryClient.refetchQueries()
   },
   onError: () => {
     message.error("Repeat Schedule failed");
   },
 });
 
-const { handleSubmit, setFieldValue } = useForm({
+const { handleSubmit, errors, setFieldValue } = useForm({
+  name: "repeatSchedule",
   validationSchema: schemaRepeatForm,
+  initialValues: {
+    week: props.week,
+    numberWeekRepeat: 1,
+  }
 });
+
 
 watch(
   () => props.week,
@@ -93,34 +102,39 @@ const handleOk = handleSubmit((value) => {
           <Field name="changeToType" v-slot="{ field }">
             <div class="flex gap-2 h-24">
               <div
-                @click="handleChange('WAO')"
+                @click="handleChange(CURRENT_STATE.WAO)"
                 class="p-2 cursor-pointer relative items-center border rounded-lg flex-1"
                 :style="
-                  field.value === 'WAO' ? 'background-color: #3b82f6;' : ''
+                  field.value === CURRENT_STATE.WAO
+                    ? 'background-color: #3b82f6;'
+                    : ''
                 "
               >
                 <div class="flex items-center justify-center flex-col h-20">
                   <Icon
                     name="ph:laptop-light"
                     style="width: 32px; height: 32px"
-                    :style="field.value === 'WAO' && 'background-color: white'"
+                    :style="
+                      field.value === CURRENT_STATE.WAO &&
+                      'background-color: white'
+                    "
                   />
 
                   <a-typography
                     class="text-center"
-                    :class="field.value === 'WAO' && 'text-white'"
+                    :class="field.value === CURRENT_STATE.WAO && 'text-white'"
                     >Work at office</a-typography
                   >
 
                   <div class="absolute left-2 top-2 rounded">
                     <Icon
-                      v-if="field.value != 'WAO'"
+                      v-if="field.value != CURRENT_STATE.WAO"
                       name="fluent:checkbox-unchecked-24-regular"
                       style="width: 24px; height: 24px; color: gray"
                     />
 
                     <Icon
-                      v-if="field.value === 'WAO'"
+                      v-if="field.value === CURRENT_STATE.WAO"
                       name="material-symbols-light:check-box-rounded"
                       style="width: 24px; height: 24px; color: white"
                     />
@@ -129,34 +143,39 @@ const handleOk = handleSubmit((value) => {
                 </div>
               </div>
               <div
-                @click="handleChange('WFH')"
+                @click="handleChange(CURRENT_STATE.WFH)"
                 class="p-2 cursor-pointer relative items-center border rounded-lg flex-1"
                 :style="
-                  field.value === 'WFH' ? 'background-color: #3b82f6;' : ''
+                  field.value === CURRENT_STATE.WFH
+                    ? 'background-color: #3b82f6;'
+                    : ''
                 "
               >
                 <div class="flex items-center justify-center flex-col h-20">
                   <Icon
                     name="codicon:home"
                     style="width: 40px; height: 40px"
-                    :style="field.value === 'WFH' && 'background-color: white'"
+                    :style="
+                      field.value === CURRENT_STATE.WFH &&
+                      'background-color: white'
+                    "
                   />
 
                   <a-typography
                     class="text-center"
-                    :class="field.value === 'WFH' && 'text-white'"
+                    :class="field.value === CURRENT_STATE.WFH && 'text-white'"
                     >Work from home</a-typography
                   >
 
                   <div class="absolute left-2 top-2 rounded">
                     <Icon
-                      v-if="field.value != 'WFH'"
+                      v-if="field.value != CURRENT_STATE.WFH"
                       name="fluent:checkbox-unchecked-24-regular"
                       style="width: 24px; height: 24px; color: gray"
                     />
 
                     <Icon
-                      v-if="field.value === 'WFH'"
+                      v-if="field.value === CURRENT_STATE.WFH"
                       name="material-symbols-light:check-box-rounded"
                       style="width: 24px; height: 24px; color: white"
                     />

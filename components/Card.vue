@@ -23,19 +23,18 @@ const props = defineProps({
   },
   state: {
     type: Object as PropType<CURRENT_STATE>,
-    default: CURRENT_STATE.WFH,
   },
   handleSelectRoom: {
     type: Function,
     default: () => {},
   },
 });
-const value = ref<string | undefined>(props.selectValue);
+const selected = ref<string | undefined>(props.selectValue);
 
 watch(
   () => props.selectValue,
   (newValue) => {
-    value.value = newValue;
+    selected.value = newValue;
   },
   { immediate: true }
 );
@@ -58,7 +57,7 @@ const options = ref<SelectProps["options"]>([
         state
       }}</a-typography-title>
       <a-select 
-        v-model:value="value"
+        v-model:value="selected"
         :style="state === CURRENT_STATE.WAO ? 'visibility: visible' :'visibility: hidden'"
         show-search
         :status="isError ? 'error' : ''"
