@@ -40,7 +40,7 @@ const { mutateAsync: repeatScheduleMutate, isPending } = useMutation({
   },
 });
 
-const { handleSubmit, setFieldValue, resetForm, values, errors } = useForm({
+const { handleSubmit, setFieldValue, values } = useForm({
   name: "repeatSchedule",
   validationSchema: schemaRepeatForm,
   initialValues: {

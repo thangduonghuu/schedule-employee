@@ -1,6 +1,5 @@
 import * as yup from "yup";
 
-// Base session schema without pm conditional
 const getSessionSchema = (isHalf: boolean) =>
   yup.object({
     am: yup.string().required(),

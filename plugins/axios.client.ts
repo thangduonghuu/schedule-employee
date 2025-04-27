@@ -32,7 +32,6 @@ export default defineNuxtPlugin((nuxtApp) => {
 
   axiosClient.interceptors.request.use((request) => {
     const token = Cookies.get("access_token");
-    // if (token)
     request.headers.Authorization = token;
     request.headers["Cache-Control"] = "no-cache";
     request.headers.Pragma = "no-cache";
@@ -41,6 +40,5 @@ export default defineNuxtPlugin((nuxtApp) => {
     return request;
   });
 
-  // Provide the Axios client globally
   nuxtApp.provide("axios", axiosClient);
 });

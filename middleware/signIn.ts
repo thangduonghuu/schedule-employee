@@ -1,9 +1,9 @@
 import Cookies from 'js-cookie';
 
 export default defineNuxtRouteMiddleware(() => {
-  const token = Cookies.get('access_token'); // or your actual cookie key
+  const token = Cookies.get('access_token'); 
 
   if (token) {
-    return navigateTo('/'); // or '/dashboard', etc.
+    return navigateTo('/'); 
   }
 });

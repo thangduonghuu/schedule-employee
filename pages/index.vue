@@ -66,8 +66,8 @@ const { mutateAsync: createScheduleMutate, isPending: isPendingCreate } =
       message.success("Create Schedule successful");
       refetch();
     },
-    onError: () => {
-      message.error("Create Schedule failed");
+    onError: (error) => {
+      message.error(error.message);
     },
   });
 
@@ -412,7 +412,7 @@ updateWeek();
             <a-button
               type="primary"
               html-type="submit"
-              :disabled="loading || isPendingCreate"
+             :disabled="loading || !isFormDirty || isPendingCreate"
               class="py-5 rounded-full flex items-center gap-1"
             >
               Confirm schedule
