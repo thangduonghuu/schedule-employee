@@ -58,6 +58,7 @@ watch(meta, (newValue) => {
   }
 });
 
+
 const { mutateAsync: createScheduleMutate, isPending: isPendingCreate } =
   useMutation({
     mutationFn: createSchedule,
@@ -194,8 +195,8 @@ updateWeek();
               </div>
             </div>
             <div>
-              {{ format(currentDate, "MMM d") }} -
-              {{ format(addDays(currentDate, 4), "MMM d, yyyy") }}
+              {{ format(addDays(currentDate, 1), "MMM d") }} -
+              {{ format(addDays(currentDate, 5), "MMM d, yyyy") }}
             </div>
           </div>
           <div class="flex gap-1">

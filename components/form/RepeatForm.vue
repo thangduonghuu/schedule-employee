@@ -27,20 +27,20 @@ const props = defineProps({
 
 const queryClient = useQueryClient();
 
+
 const { mutateAsync: repeatScheduleMutate, isPending } = useMutation({
   mutationFn: repeatSchedule,
   onSuccess: () => {
     message.success("Repeat Schedule successful");
     props.onCloseModal();
     queryClient.invalidateQueries();
-    queryClient.refetchQueries();
   },
   onError: () => {
     message.error("Repeat Schedule failed");
   },
 });
 
-const { handleSubmit, setFieldValue , resetForm } = useForm({
+const { handleSubmit, setFieldValue, resetForm } = useForm({
   name: "repeatSchedule",
   validationSchema: schemaRepeatForm,
   initialValues: {
@@ -53,7 +53,7 @@ watch(
   () => props.open,
   (newVal) => {
     if (newVal) {
-      resetForm()
+      resetForm();
     }
   }
 );
@@ -81,6 +81,7 @@ const handleOk = handleSubmit((value) => {
     :footer="false"
     title="Repeat the schedule"
     :confirm-loading="isPending"
+    destroyOnClose
   >
     <div>
       <form @submit.prevent="handleOk">
@@ -90,11 +91,12 @@ const handleOk = handleSubmit((value) => {
         <div class="flex align-center">
           <div class="flex align-center gap-2">
             <p>Repeat for</p>
-            <Field name="numberWeekRepeat">
+            <Field name="numberWeekRepeat" v-slot="{ field }">
               <a-input-number
                 id="inputNumber"
                 :defaultValue="1"
                 @change="handleChangeNumberWeek"
+                @value="field.value"
                 :min="1"
                 :max="7"
               />
