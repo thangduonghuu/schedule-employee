@@ -76,6 +76,7 @@ const handleOk = handleSubmit((value) => {
     :open="open"
     :footer="false"
     title="Repeat the schedule"
+    destroyOnClose
     :confirm-loading="isPending"
   >
     <div>
