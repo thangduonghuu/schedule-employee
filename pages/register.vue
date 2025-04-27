@@ -72,6 +72,10 @@ const rules: Record<string, Rule[]> = {
   checkPass: [{ required: true, validator: validatePass2, trigger: "change" }],
 };
 
+const backToLogin = () => {
+  router.push("/login");
+};
+
 onMounted(() => {
   const token = Cookie.get("access_token");
   document.title = "Register Page";
@@ -81,6 +85,8 @@ onMounted(() => {
     showPage.value = true;
   }
 });
+
+
 </script>
 
 <template>
@@ -89,6 +95,14 @@ onMounted(() => {
     class="flex items-center h-full justify-center bg-background"
   >
     <div class="p-8 pb-3 w-[500px] bg-custom rounded-2xl shadow-lg">
+      <div>
+        <div class="flex gap-2 cursor-pointer items-center" @click="backToLogin">
+          <Icon name="weui:back-filled" />
+          <a-typography-text style="color: #6b7280">
+            Back to login
+          </a-typography-text>
+        </div>
+      </div>
       <h1 class="text-2xl font-bold text-center mb-4">Register</h1>
       <a-form
         :model="formState"

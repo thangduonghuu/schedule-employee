@@ -33,13 +33,14 @@ const { mutateAsync: repeatScheduleMutate, isPending } = useMutation({
     message.success("Repeat Schedule successful");
     props.onCloseModal();
     queryClient.invalidateQueries();
+    props.refetch();
   },
   onError: () => {
     message.error("Repeat Schedule failed");
   },
 });
 
-const { handleSubmit, setFieldValue, resetForm, values } = useForm({
+const { handleSubmit, setFieldValue, resetForm, values, errors } = useForm({
   name: "repeatSchedule",
   validationSchema: schemaRepeatForm,
   initialValues: {
@@ -51,6 +52,7 @@ const { handleSubmit, setFieldValue, resetForm, values } = useForm({
 watch(values, (newVal) => {
   if (newVal) {
     setFieldValue("week", newVal.week);
+    setFieldValue("numberWeekRepeat", 1);
   }
 });
 
@@ -58,6 +60,7 @@ watch(
   () => props.week,
   (newVal) => {
     if (props.week) {
+      console.log(props.week)
       setFieldValue("week", newVal);
     }
   }
@@ -184,7 +187,6 @@ const handleOk = handleSubmit((value) => {
                       name="material-symbols-light:check-box-rounded"
                       style="width: 24px; height: 24px; color: white"
                     />
-                    <!-- <CheckSquareOutlined style="font-size: 20px;" /> -->
                   </div>
                 </div>
               </div>
