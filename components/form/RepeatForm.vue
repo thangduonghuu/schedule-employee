@@ -27,7 +27,6 @@ const props = defineProps({
 
 const queryClient = useQueryClient();
 
-
 const { mutateAsync: repeatScheduleMutate, isPending } = useMutation({
   mutationFn: repeatSchedule,
   onSuccess: () => {
@@ -40,7 +39,7 @@ const { mutateAsync: repeatScheduleMutate, isPending } = useMutation({
   },
 });
 
-const { handleSubmit, setFieldValue, resetForm } = useForm({
+const { handleSubmit, setFieldValue, resetForm, values } = useForm({
   name: "repeatSchedule",
   validationSchema: schemaRepeatForm,
   initialValues: {
@@ -49,14 +48,11 @@ const { handleSubmit, setFieldValue, resetForm } = useForm({
   },
 });
 
-watch(
-  () => props.open,
-  (newVal) => {
-    if (newVal) {
-      resetForm();
-    }
+watch(values, (newVal) => {
+  if (newVal) {
+    setFieldValue("week", newVal.week);
   }
-);
+});
 
 watch(
   () => props.week,
@@ -81,7 +77,6 @@ const handleOk = handleSubmit((value) => {
     :footer="false"
     title="Repeat the schedule"
     :confirm-loading="isPending"
-    destroyOnClose
   >
     <div>
       <form @submit.prevent="handleOk">
