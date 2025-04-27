@@ -60,7 +60,6 @@ watch(
   () => props.week,
   (newVal) => {
     if (props.week) {
-      console.log(props.week)
       setFieldValue("week", newVal);
     }
   }
