@@ -58,7 +58,6 @@ watch(meta, (newValue) => {
   }
 });
 
-
 const { mutateAsync: createScheduleMutate, isPending: isPendingCreate } =
   useMutation({
     mutationFn: createSchedule,
@@ -195,8 +194,8 @@ updateWeek();
               </div>
             </div>
             <div>
-              {{ format(addDays(currentDate, 1), "MMM d") }} -
-              {{ format(addDays(currentDate, 5), "MMM d, yyyy") }}
+                {{ format(startOfWeek(currentDate, { weekStartsOn: 1 }), "MMM d") }} -
+                {{ format(addDays(startOfWeek(currentDate, { weekStartsOn: 1 }), 4), "MMM d, yyyy") }}
             </div>
           </div>
           <div class="flex gap-1">
@@ -226,12 +225,12 @@ updateWeek();
             v-if="scheduleForHalfDay"
             class="flex items-center justify-between w-10"
           ></div>
-          <div class="w-full">
-            <a-row type="flex flex-1" :gutter="16">
+          <!-- <div class="w-full">
+            <a-row type="flex flex-1" :gutter="16"  >
               <template v-for="(day, index) in weekDays" :key="index">
                 <a-col
                   v-if="index !== 0 && index !== weekDays.length - 1"
-                  class="gutter-row"
+                  class="gutter-row w-[250px]"
                   flex="1"
                 >
                   <div>
@@ -251,7 +250,7 @@ updateWeek();
                 </a-col>
               </template>
             </a-row>
-          </div>
+          </div> -->
         </div>
 
         <div v-if="!loading">
@@ -284,6 +283,20 @@ updateWeek();
             <div v-if="schedule" class="w-full">
               <a-row type="flex flex-1" :gutter="16">
                 <a-col class="gutter-row" flex="1">
+                  <div class="pb-3">
+                    <a-typography-title
+                      class="text-center"
+                      :level="4"
+                      :style="{
+                        color:
+                          weekDays[1] === format(new Date(), 'EEE d')
+                            ? 'red'
+                            : 'inherit',
+                      }"
+                    >
+                      {{ weekDays[1] }}
+                    </a-typography-title>
+                  </div>
                   <Field
                     type="text"
                     :keep-value="true"
@@ -304,6 +317,20 @@ updateWeek();
                   </Field>
                 </a-col>
                 <a-col class="gutter-row" flex="1">
+                  <div class="pb-3">
+                    <a-typography-title
+                      class="text-center"
+                      :level="4"
+                      :style="{
+                        color:
+                          weekDays[2] === format(new Date(), 'EEE d')
+                            ? 'red'
+                            : 'inherit',
+                      }"
+                    >
+                      {{ weekDays[2] }}
+                    </a-typography-title>
+                  </div>
                   <Field
                     type="text"
                     :keep-value="true"
@@ -324,6 +351,20 @@ updateWeek();
                   </Field>
                 </a-col>
                 <a-col class="gutter-row" flex="1">
+                  <div class="pb-3">
+                    <a-typography-title
+                      class="text-center"
+                      :level="4"
+                      :style="{
+                        color:
+                          weekDays[3] === format(new Date(), 'EEE d')
+                            ? 'red'
+                            : 'inherit',
+                      }"
+                    >
+                      {{ weekDays[3] }}
+                    </a-typography-title>
+                  </div>
                   <Field
                     type="text"
                     :keep-value="true"
@@ -343,6 +384,20 @@ updateWeek();
                   </Field>
                 </a-col>
                 <a-col class="gutter-row" flex="1">
+                  <div class="pb-3">
+                    <a-typography-title
+                      class="text-center"
+                      :level="4"
+                      :style="{
+                        color:
+                          weekDays[4] === format(new Date(), 'EEE d')
+                            ? 'red'
+                            : 'inherit',
+                      }"
+                    >
+                      {{ weekDays[4] }}
+                    </a-typography-title>
+                  </div>
                   <Field
                     type="text"
                     name="schedule.Thursday"
@@ -362,6 +417,20 @@ updateWeek();
                   </Field>
                 </a-col>
                 <a-col class="gutter-row" flex="1">
+                  <div class="pb-3">
+                    <a-typography-title
+                      class="text-center"
+                      :level="4"
+                      :style="{
+                        color:
+                          weekDays[5] === format(new Date(), 'EEE d')
+                            ? 'red'
+                            : 'inherit',
+                      }"
+                    >
+                      {{ weekDays[5] }}
+                    </a-typography-title>
+                  </div>
                   <Field
                     type="text"
                     :keep-value="true"
@@ -412,7 +481,7 @@ updateWeek();
             <a-button
               type="primary"
               html-type="submit"
-             :disabled="loading || !isFormDirty || isPendingCreate"
+              :disabled="loading || !isFormDirty || isPendingCreate"
               class="py-5 rounded-full flex items-center gap-1"
             >
               Confirm schedule
