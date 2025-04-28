@@ -1,4 +1,3 @@
-// plugins/vue-query.ts
 import { VueQueryPlugin } from '@tanstack/vue-query';
 import { defineNuxtPlugin } from '#app';
 

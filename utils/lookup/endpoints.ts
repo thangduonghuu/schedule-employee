@@ -2,7 +2,6 @@ import { isArray } from "lodash";
 
 const parseParams = (params?: any): string => {
   if (!params) return "";
-  // all key value pair that have undefined will be remove
   Object.keys(params).forEach((key) => {
     if (params[key] === undefined) delete params[key];
   });
