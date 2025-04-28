@@ -4,7 +4,7 @@ export default defineNuxtConfig({
   devtools: { enabled: false },
   modules: ["@nuxtjs/tailwindcss", "@ant-design-vue/nuxt", "@nuxt/icon"],
   devServer: {
-    port: 3000,
+    port: 3001,
   },
   runtimeConfig: {
     public: {
