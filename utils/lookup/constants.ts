@@ -1,31 +1,31 @@
 export const DefaultValueHalfSchedule = {
   isHalfSchedule: true,
   schedule: {
-    Monday: {
+    monday: {
       am: "WAO",
       pm: "WAO",
       amState: "",
       pmState: "",
     },
-    Tuesday: {
+    tuesday: {
       am: "WAO",
       pm: "WAO",
       amState: "",
       pmState: "",
     },
-    Wednesday: {
+    wednesday: {
       am: "WAO",
       pm: "WAO",
       amState: "",
       pmState: "",
     },
-    Thursday: {
+    thursday: {
       am: "WAO",
       pm: "WAO",
       amState: "",
       pmState: "",
     },
-    Friday: {
+    friday: {
       am: "WAO",
       pm: "WAO",
       amState: "",
@@ -37,19 +37,19 @@ export const DefaultValueHalfSchedule = {
 export const DefaultValueFullSchedule = {
   isHalfSchedule: false,
   schedule: {
-    Monday: {
+    monday: {
       am: "WAO",
     },
-    Tuesday: {
+    tuesday: {
       am: "WAO",
     },
-    Wednesday: {
+    wednesday: {
       am: "WAO",
     },
-    Thursday: {
+    thursday: {
       am: "WAO",
     },
-    Friday: {
+    friday: {
       am: "WAO",
     },
   },

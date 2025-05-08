@@ -71,19 +71,19 @@ const { mutateAsync: createScheduleMutate, isPending: isPendingCreate } =
   });
 
 const { handleChange: handleChangeMonday, validate: validateMonday } =
-  useField("schedule.Monday");
+  useField("schedule.monday");
 
 const { handleChange: handleChangeTuesday, validate: validateTuesday } =
-  useField("schedule.Tuesday");
+  useField("schedule.tuesday");
 
 const { handleChange: handleChangeWednesday, validate: validateWednesday } =
-  useField("schedule.Wednesday");
+  useField("schedule.wednesday");
 
 const { handleChange: handleChangeThursday, validate: validateThursday } =
-  useField("schedule.Thursday");
+  useField("schedule.thursday");
 
 const { handleChange: handleChangeFriday, validate: validateFriday } =
-  useField("schedule.Friday");
+  useField("schedule.friday");
 
 const onSubmit = handleSubmit(
   (values) => {
@@ -301,7 +301,7 @@ updateWeek();
                     type="text"
                     :keep-value="true"
                     :validate-on-change="true"
-                    name="schedule.Monday"
+                    name="schedule.monday"
                     v-slot="{ field, errorMessage }"
                   >
                     <DateSchedule
@@ -335,7 +335,7 @@ updateWeek();
                     type="text"
                     :keep-value="true"
                     :validate-on-change="true"
-                    name="schedule.Tuesday"
+                    name="schedule.tuesday"
                     v-slot="{ field, errorMessage }"
                   >
                     <DateSchedule
@@ -369,7 +369,7 @@ updateWeek();
                     type="text"
                     :keep-value="true"
                     :validate-on-change="true"
-                    name="schedule.Wednesday"
+                    name="schedule.wednesday"
                     v-slot="{ field, errorMessage }"
                   >
                     <DateSchedule
@@ -400,7 +400,7 @@ updateWeek();
                   </div>
                   <Field
                     type="text"
-                    name="schedule.Thursday"
+                    name="schedule.thursday"
                     :keep-value="true"
                     :validate-on-change="true"
                     v-slot="{ field, errorMessage }"
@@ -435,7 +435,7 @@ updateWeek();
                     type="text"
                     :keep-value="true"
                     :validate-on-change="true"
-                    name="schedule.Friday"
+                    name="schedule.friday"
                     v-slot="{ field, errorMessage }"
                   >
                     <DateSchedule

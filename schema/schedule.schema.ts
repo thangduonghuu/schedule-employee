@@ -25,11 +25,11 @@ const getSessionSchema = (isHalf: boolean) =>
 const scheduleSchema = yup.lazy((value, { parent }) => {
   const isHalf = parent?.isHalfSchedule;
   return yup.object({
-    Monday: getSessionSchema(isHalf).required(),
-    Tuesday: getSessionSchema(isHalf).required(),
-    Wednesday: getSessionSchema(isHalf).required(),
-    Thursday: getSessionSchema(isHalf).required(),
-    Friday: getSessionSchema(isHalf).required(),
+    monday: getSessionSchema(isHalf).required(),
+    tuesday: getSessionSchema(isHalf).required(),
+    wednesday: getSessionSchema(isHalf).required(),
+    thursday: getSessionSchema(isHalf).required(),
+    friday: getSessionSchema(isHalf).required(),
   });
 });
 
